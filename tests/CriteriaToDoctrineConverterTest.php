@@ -35,7 +35,7 @@ class CriteriaToDoctrineConverterTest extends TestCase
                 ]
             ),
             ['id' => 'asc'],
-            1,
+            0,
             10
         );
 
@@ -59,7 +59,7 @@ class CriteriaToDoctrineConverterTest extends TestCase
             'id',
             'asc',
             10,
-            1
+            2
         );
 
         $expectedDoctrineCriteria = new DoctrineCriteria(
@@ -71,7 +71,7 @@ class CriteriaToDoctrineConverterTest extends TestCase
                 ]
             ),
             ['id' => 'asc'],
-            1,
+            10,
             10
         );
 
