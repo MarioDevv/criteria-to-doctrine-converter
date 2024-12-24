@@ -21,12 +21,16 @@ final readonly class CriteriaToDoctrineConverter
 
     public function convert(Criteria $criteria): DoctrineCriteria
     {
-        return new DoctrineCriteria(
+        $doctrineCriteria = new DoctrineCriteria(
             $this->buildExpression($criteria),
             $this->formatOrder($criteria),
             $criteria->pageNumber(),
             $criteria->pageSize()
         );
+
+        $doctrineCriteria->setFirstResult(($criteria->pageNumber() - 1) * $criteria->pageSize());
+
+        return $doctrineCriteria;
     }
 
     private function buildExpression(Criteria $criteria): ?CompositeExpression
