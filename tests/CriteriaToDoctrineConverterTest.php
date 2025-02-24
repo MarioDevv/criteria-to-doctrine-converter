@@ -41,7 +41,7 @@ class CriteriaToDoctrineConverterTest extends TestCase
 
 
         $criteriaToDoctrineConverter = new CriteriaToDoctrineConverter();
-        $doctrineCriteria = $criteriaToDoctrineConverter->convert($criteria);
+        $doctrineCriteria            = $criteriaToDoctrineConverter->convert($criteria);
 
 
         $this->assertEquals($expectedDoctrineCriteria, $doctrineCriteria);
@@ -77,10 +77,48 @@ class CriteriaToDoctrineConverterTest extends TestCase
 
         $criteriaToDoctrineConverter = new CriteriaToDoctrineConverter(
             ['id' => 'id'],
-            ['id' => fn($value) => (array) $value]
+            ['id' => fn($value) => (array)$value]
         );
-        $doctrineCriteria = $criteriaToDoctrineConverter->convert($criteria);
+        $doctrineCriteria            = $criteriaToDoctrineConverter->convert($criteria);
 
         $this->assertEquals($expectedDoctrineCriteria, $doctrineCriteria);
+    }
+
+
+    /** @test */
+    public function it_should_be_able_to_paginate_only_with_page_size(): void
+    {
+
+        $criteria = Criteria::fromPrimitives(
+            [
+                ['field' => 'name', 'operator' => 'CONTAINS', 'value' => 'Mario'],
+                ['field' => 'id', 'operator' => '=', 'value' => '1'],
+            ],
+            'id',
+            'asc',
+            10,
+            null
+        );
+
+        $expectedDoctrineCriteria = new DoctrineCriteria(
+            new CompositeExpression(
+                CompositeExpression::TYPE_AND,
+                [
+                    new Comparison('name', 'CONTAINS', 'Mario'),
+                    new Comparison('id', '=', 1),
+                ]
+            ),
+            ['id' => 'asc'],
+            null,
+            10
+        );
+
+
+        $criteriaToDoctrineConverter = new CriteriaToDoctrineConverter();
+        $doctrineCriteria            = $criteriaToDoctrineConverter->convert($criteria);
+
+
+        $this->assertEquals($expectedDoctrineCriteria, $doctrineCriteria);
+
     }
 }

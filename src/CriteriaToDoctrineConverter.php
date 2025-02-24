@@ -28,7 +28,9 @@ final readonly class CriteriaToDoctrineConverter
             $criteria->pageSize()
         );
 
-        $doctrineCriteria->setFirstResult(($criteria->pageNumber() - 1) * $criteria->pageSize());
+        if (!is_null($criteria->pageNumber()) && $criteria->pageSize() > 0) {
+            $doctrineCriteria->setFirstResult(($criteria->pageNumber() - 1) * $criteria->pageSize());
+        }
 
         return $doctrineCriteria;
     }
